@@ -1,0 +1,13 @@
+{
+  "data": {
+    "id": "1",
+    "type": "customers",
+    "attributes": {
+      "segment": "EXBN",
+      "name": "John Smith"
+    },
+    "links": {
+      "self": "http://localhost:8081/api/customers/1"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "type": "customers",
+      "attributes": {
+        "segment": "Priority",
+        "name": "John Smith"
+      },
+      "links": {
+        "self": "http://localhost:8081/api/customers/1"
+      }
+    },
+    {
+      "id": "2",
+      "type": "customers",
+      "attributes": {
+        "segment": "Personal",
+        "name": "Tailor Swift"
+      },
+      "links": {
+        "self": "http://localhost:8081/api/customers/2"
+      }
+    }
+  ],
+  "links": {
+    "first": "http://localhost:8081/api/customers?page[limit]=20",
+    "last": "http://localhost:8081/api/customers?page[limit]=20",
+    "next": null,
+    "prev": null
+  },
+  "meta": {
+    "totalResourceCount": 2
+  }
+}

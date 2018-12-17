@@ -1,0 +1,20 @@
+server:
+  port: 8091
+
+spring:
+  security:
+    user:
+      name: omfuser
+      password: ENC(eiHqadpUCkEV8ioxTSjUYX7Eqog7fz10ynW87FG6ZFg=) # password
+
+jasypt:
+  encryptor:
+    providerName: BC
+    providerClassName: org.bouncycastle.jce.provider.BouncyCastleProvider
+    algorithm: PBEWITHSHA256AND256BITAES-CBC-BC
+    password: supersecretzomfuser
+
+logging:
+  level:
+    web: debug
+
