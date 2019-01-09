@@ -18,7 +18,7 @@ public class CustomerClient {
     private Map<String, Customer> customers = new HashMap<>();
     public static final MediaType APPLICATION_JSONAPI = valueOf("application/vnd.api+json");
 
-    private WebClient client = WebClient.create("http://localhost:8092");
+    private WebClient client = WebClient.create("http://localhost:8089");
     // http://localhost:9090/interface/api/customer/1?filter[ckaRequired]=true&fields[customer]=ckasStatus
 
     public Mono<Customer> getCustomerById(String id) {
@@ -26,11 +26,10 @@ public class CustomerClient {
     }
 
     public Flux<Customer> getCustomers = client.get()
-            .uri("/interface/api/customer/1?filter[ckaRequired]=true&fields[customer]=ckasStatus")
+            .uri("/interface/api/customer/1")
             .accept(APPLICATION_JSONAPI)
             .exchange()
-            .block()
-            .bodyToFlux(Customer.class);
+            .flatMapMany(res -> res.bodyToFlux(Customer.class));
 
 //    private WebClient client = WebClient.create("http://localhost:8092");
 //
