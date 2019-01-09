@@ -1,14 +1,14 @@
 package com.kiwi.customer.web;
 
-public class Customer {
+public class CustomerDto {
 
     private String id;
     private String name;
     private String segment;
 
-    public Customer() {}
+    public CustomerDto() {}
 
-    public Customer(String id, String name, String segment){
+    public CustomerDto(String id, String name, String segment) {
         this.id = id;
         this.name = name;
         this.segment = segment;

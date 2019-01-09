@@ -6,8 +6,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Component
 public class CustomerHandler {
@@ -23,16 +24,16 @@ public class CustomerHandler {
         // build notFound response
         Mono<ServerResponse> notFound = ServerResponse.notFound().build();
         // get customer from repository
-        Mono<Customer> customerMono = customerService.getCustomerById(customerId);
+        Mono<CustomerDto> customerMono = customerService.getCustomerById(customerId);
         // build response
         return customerMono
-                .flatMap(customer -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(customer)))
+                .flatMap(customerDto -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(customerDto)))
                 .switchIfEmpty(notFound);
     }
 
     public Mono<ServerResponse> findAll(ServerRequest request) {
-        Flux<Customer> customers = customerService.getCustomers();
-        return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(customers, Customer.class);
+        Mono<CustomerDtos> customers = customerService.getCustomers();
+        return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(customers, CustomerDtos.class);
     }
 
 }

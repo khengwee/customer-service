@@ -22,18 +22,15 @@ public class CustomerClientTests {
 
     @Test
     public void testGetCustomerClient() throws Exception {
-        givenThat(get(urlEqualTo("/interface/api/customer/1"))
-                .withHeader("Accept", equalTo("application/vnd.api+json"))
+        givenThat(get(urlEqualTo("/api/mock/customer"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/vnd.api+json")
                         .withBody(loadFile("json/customers.json"))));
 
-        customerClient.getCustomers.subscribe();
+        customerClient.getCustomers();
 
-        verify(postRequestedFor(urlMatching("/interface/api/customer/[a-z0-9]+"))
-                .withRequestBody(matching("*type\": \"customers\"*"))
-                .withHeader("Content-Type", notMatching("application/vnd.api+json")));
+        verify(postRequestedFor(urlMatching("/api/mock/customer")));
 
     }
 
