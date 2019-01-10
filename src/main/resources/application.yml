@@ -18,3 +18,7 @@ logging:
   level:
     web: debug
 
+backend:
+  tap:
+    domain: http://localhost:8593
+
