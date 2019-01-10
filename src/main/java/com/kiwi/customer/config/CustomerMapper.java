@@ -15,8 +15,8 @@ public interface CustomerMapper {
 
     @Mappings({
             @Mapping(source = "data.id", target = "id"),
-            @Mapping(source = "data.attributes.ckaRequired", target = "name"),
-            @Mapping(source = "data.attributes.ckaStatus", target = "segment")
+            @Mapping(source = "data.attributes.name", target = "name"),
+            @Mapping(source = "data.attributes.segment", target = "segment")
     })
     CustomerDto toCustomerDto(Customer customer);
 

@@ -1,5 +1,7 @@
 server:
   port: 8091
+  backend:
+    customerValidationUrl: http://localhost:8593/api/mock/customer
 
 spring:
   security:
@@ -18,7 +20,4 @@ logging:
   level:
     web: debug
 
-backend:
-  tap:
-    domain: http://localhost:8593
 

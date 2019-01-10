@@ -1,95 +1,89 @@
 package com.kiwi.customer.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.w3c.dom.Attr;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Scanner;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 @RunWith(SpringRunner.class)
+@SpringBootTest
 public class CustomerClientTests {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(8089);
-//
-//    @MockBean
-//    private CustomerClient customerClient;
+
+    @Autowired
+    private CustomerClient customerClient;
 
     @Test
-    public void testGetCustomerClient() throws Exception {
+    public void testGetOneCustomerClient() throws Exception {
+        givenThat(get(urlEqualTo("/api/mock/customer/1"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/vnd.api+json")
+                        .withBody(loadFile("json/customers_1.json"))));
+
+        customerClient.setCustomerValidationUrl("http://localhost:8089/api/mock/customer");
+        Mono<Customer> customerMono = customerClient.getCustomerById("1");
+        Mono<String> customerStrMono = customerMono.flatMap(customer -> {
+            String customerString = null;
+            try {
+                customerString = new ObjectMapper().writeValueAsString(customer);
+            } catch (Exception e) {
+            }
+            return Mono.just(customerString);
+        });
+
+        String customerString = loadFile("json/customers_1.json");
+        customerString = customerString.replaceAll("\\s","");
+        System.out.println("customersString " + customerString);
+        StepVerifier.create(customerStrMono)
+                .expectNext(customerString)
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    public void testGetCustomersClient() throws Exception {
         givenThat(get(urlEqualTo("/api/mock/customer"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/vnd.api+json")
                         .withBody(loadFile("json/customers.json"))));
 
-//        CloseableHttpClient httpClient = HttpClients.createDefault();
-//        HttpGet request = new HttpGet("http://localhost:8089/api/mock/customer");
-//        HttpResponse httpResponse = httpClient.execute(request);
-//        String stringResponse = convertHttpResponseToString(httpResponse);
-
-        CustomerClient customerClient = new CustomerClient();
+        customerClient.setCustomerValidationUrl("http://localhost:8089/api/mock/customer");
         Mono<Customers> customersMono = customerClient.getCustomers();
+        Mono<String> customersStrMono = customersMono.flatMap(customers -> {
+            String customersString = null;
+            try {
+                customersString = new ObjectMapper().writeValueAsString(customers);
+            } catch (Exception e) {
+            }
+            return Mono.just(customersString);
+        });
 
-        Customers customers = new Customers();
-        Data data1 = new Data();
-        data1.setId("1");
-        data1.setType("customers");
-        Attributes attributes = new Attributes();
-        attributes.setName("John Smith");
-        attributes.setSegment("Priority");
-        data1.setAttributes(attributes);
-        Links links = new Links();
-        links.setSelf("http://localhost:8081/api/customers/1");
-        data1.setLinks(links);
-
-        Link<Data> datas = new ArrayList<>();
-
-        StepVerifier.create(customersMono)
-        .expectNext()
-        .verifyComplete();
-//        verify(getRequestedFor(urlEqualTo("/api/mock/customer")));
-        //assertEquals(200, httpResponse.getStatusLine().getStatusCode());
-        //assertEquals("application/json", httpResponse.getFirstHeader("Content-Type").getValue());
-        //assertThat(stringResponse, containsString("\"type\": \"customers\""));
-
-
+        String customersString = loadFile("json/customers.json");
+        customersString = customersString.replaceAll("\\s","");
+        System.out.println("customersString " + customersString);
+        StepVerifier.create(customersStrMono)
+                .expectNext(customersString)
+                .expectComplete()
+                .verify();
     }
 
     private static String loadFile(String filename) throws Exception {
         InputStream inputStream = CustomerClientTests.class.getClassLoader().getResourceAsStream(filename);
         return IOUtils.toString(inputStream);
-    }
-
-    private String convertHttpResponseToString(HttpResponse httpResponse) throws IOException {
-        InputStream inputStream = httpResponse.getEntity().getContent();
-        return convertInputStreamToString(inputStream);
-    }
-
-    private String convertInputStreamToString(InputStream inputStream) {
-        Scanner scanner = new Scanner(inputStream, "UTF-8");
-        String string = scanner.useDelimiter("\\Z").next();
-        scanner.close();
-        return string;
     }
 
 }

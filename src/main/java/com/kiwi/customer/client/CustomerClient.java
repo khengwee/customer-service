@@ -17,30 +17,33 @@ import static org.springframework.http.MediaType.valueOf;
 public class CustomerClient {
 
     private static final MediaType APPLICATION_JSONAPI = valueOf("application/vnd.api+json");
-    private WebClient webClient = WebClient.create("http://localhost:8089");
+    private WebClient webClient = WebClient.create();
 
-//    public CustomerClient(WebClient.Builder webClientBuilder) {
-//        this.webClient = webClientBuilder.baseUrl("http://localhost:8089").build();
-//    }
+    @Value("${server.backend.customerValidationUrl}")
+    private String customerValidationUrl;
 
     public Mono<Customer> getCustomerById(String id) {
         return getCustomerResponse(id).flatMap(res -> res.bodyToMono(Customer.class));
     }
 
     public Mono<Customers> getCustomers() {
-        return getCustomersResponse.flatMap(res -> res.bodyToMono(Customers.class));
+        return getCustomersResponse().flatMap(res -> res.bodyToMono(Customers.class));
     }
 
     private Mono<ClientResponse> getCustomerResponse(String id) {
         return this.webClient.get()
-                .uri("/api/mock/customer/" + id)
-                .accept(APPLICATION_JSONAPI)
+                .uri(customerValidationUrl + "/{id}", id)
                 .exchange();
     }
 
-    private Mono<ClientResponse> getCustomersResponse = this.webClient.get()
-            .uri("/api/mock/customer")
-            .accept(APPLICATION_JSONAPI)
-            .exchange();
+    private Mono<ClientResponse> getCustomersResponse() {
+        return this.webClient.get()
+                .uri(customerValidationUrl)
+                .exchange();
+    }
+
+    public void setCustomerValidationUrl(String customerValidationUrl) {
+        this.customerValidationUrl = customerValidationUrl;
+    }
 
 }

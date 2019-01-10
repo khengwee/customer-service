@@ -3,11 +3,12 @@
     "id": "1",
     "type": "customers",
     "attributes": {
-      "segment": "EXBN",
-      "name": "John Smith"
+      "name": "JohnSmith",
+      "segment": "EXBN"
     },
     "links": {
       "self": "http://localhost:8081/api/customers/1"
     }
-  }
+  },
+  "meta": null
 }

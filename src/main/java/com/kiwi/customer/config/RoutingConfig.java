@@ -1,5 +1,6 @@
-package com.kiwi.customer.web;
+package com.kiwi.customer.config;
 
+import com.kiwi.customer.web.CustomerHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
