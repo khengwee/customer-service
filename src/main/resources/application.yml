@@ -8,6 +8,17 @@ spring:
     user:
       name: omfuser
       password: ENC(eiHqadpUCkEV8ioxTSjUYX7Eqog7fz10ynW87FG6ZFg=) # password
+    oauth2:
+      client:
+        registration:
+          kong:
+            client-id: PeG612yegNfn1fuypmdbcAKMbD4a
+            client-secret: RoUw8eSRxjLHLBf48aXke5Wku70a
+            scopes: RPBWMApiService_GET
+            authorization-grant-type: client_credentials
+        provider:
+          kong:
+            token-uri: https://identity-sit.api.dev.net/oauth2/token
 
 jasypt:
   encryptor:
