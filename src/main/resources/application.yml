@@ -1,5 +1,7 @@
 server:
   port: 8091
+  backend:
+    customerValidationUrl: http://localhost:8593/api/mock/customer
 
 spring:
   security:
@@ -17,4 +19,5 @@ jasypt:
 logging:
   level:
     web: debug
+
 

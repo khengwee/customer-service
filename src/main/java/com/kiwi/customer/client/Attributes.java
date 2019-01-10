@@ -2,22 +2,22 @@ package com.kiwi.customer.client;
 
 public class Attributes {
 
-    private String ckaRequired;
-    private String ckaStatus;
+    private String name;
+    private String segment;
 
-    public String getCkaRequired() {
-        return ckaRequired;
+    public String getName() {
+        return name;
     }
 
-    public void setCkaRequired(String ckaRequired) {
-        this.ckaRequired = ckaRequired;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getCkaStatus() {
-        return ckaStatus;
+    public String getSegment() {
+        return segment;
     }
 
-    public void setCkaStatus(String ckaStatus) {
-        this.ckaStatus = ckaStatus;
+    public void setSegment(String segment) {
+        this.segment = segment;
     }
 }

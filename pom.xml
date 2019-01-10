@@ -57,6 +57,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- REACTOR -->
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-test</artifactId>
+            <version>3.1.14.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- WIREMOCK -->
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
