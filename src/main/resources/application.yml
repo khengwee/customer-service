@@ -19,5 +19,3 @@ jasypt:
 logging:
   level:
     web: debug
-
-
