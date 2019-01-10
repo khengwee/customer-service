@@ -25,6 +25,13 @@ public class CustomerClientTests {
     @Autowired
     private CustomerClient customerClient;
 
+    private ObjectMapper objectMapper;
+
+    @Before
+    public void initSetup() {
+        objectMapper = new ObjectMapper();
+    }
+
     @Test
     public void testGetOneCustomerClient() throws Exception {
         givenThat(get(urlEqualTo("/api/mock/customer/1"))
@@ -38,7 +45,7 @@ public class CustomerClientTests {
         Mono<String> customerStrMono = customerMono.flatMap(customer -> {
             String customerString = null;
             try {
-                customerString = new ObjectMapper().writeValueAsString(customer);
+                customerString = objectMapper.writeValueAsString(customer);
             } catch (Exception e) {
             }
             return Mono.just(customerString);
@@ -66,7 +73,7 @@ public class CustomerClientTests {
         Mono<String> customersStrMono = customersMono.flatMap(customers -> {
             String customersString = null;
             try {
-                customersString = new ObjectMapper().writeValueAsString(customers);
+                customersString = objectMapper.writeValueAsString(customers);
             } catch (Exception e) {
             }
             return Mono.just(customersString);
