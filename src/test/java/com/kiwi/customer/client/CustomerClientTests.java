@@ -12,6 +12,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
@@ -90,7 +91,7 @@ public class CustomerClientTests {
 
     private static String loadFile(String filename) throws Exception {
         InputStream inputStream = CustomerClientTests.class.getClassLoader().getResourceAsStream(filename);
-        return IOUtils.toString(inputStream);
+        return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
     }
 
 }

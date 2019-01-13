@@ -18,7 +18,6 @@ public class WebSecurityConfig {
     @Value("${spring.security.user.password}")
     private String password;
 
-
     @Bean
     SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http

@@ -1,7 +1,7 @@
 server:
   port: 8091
   backend:
-    customerValidationUrl: http://localhost:8593/api/mock/customer
+    customerValidationUrl: http://localhost:8090/api/resource/customers
 
 spring:
   security:
@@ -11,14 +11,14 @@ spring:
     oauth2:
       client:
         registration:
-          kong:
-            client-id: PeG612yegNfn1fuypmdbcAKMbD4a
-            client-secret: RoUw8eSRxjLHLBf48aXke5Wku70a
-            scopes: RPBWMApiService_GET
+          okta:
+            client-id: 0oaivx2uysUxzlFvd0h7
+            client-secret: jdo1xC5AXlgsR5Wy4zNz82MoO9_kxPZX1gGkVa7d
             authorization-grant-type: client_credentials
+            scope: customer_read
         provider:
-          kong:
-            token-uri: https://identity-sit.api.dev.net/oauth2/token
+          okta:
+            token-uri: https://dev-517011.oktapreview.com/oauth2/default/v1/token
 
 jasypt:
   encryptor:
