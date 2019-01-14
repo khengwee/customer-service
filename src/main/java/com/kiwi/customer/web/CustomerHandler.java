@@ -32,8 +32,8 @@ public class CustomerHandler {
     }
 
     public Mono<ServerResponse> findAll(ServerRequest request) {
-        Mono<CustomerDtos> customers = customerService.getCustomers();
-        return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(customers, CustomerDtos.class);
+        Mono<List> customers = customerService.getCustomers();
+        return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(customers, List.class);
     }
 
 }

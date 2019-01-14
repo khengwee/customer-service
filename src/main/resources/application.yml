@@ -1,13 +1,24 @@
 server:
   port: 8091
   backend:
-    customerValidationUrl: http://localhost:8593/api/mock/customer
+    customerValidationUrl: http://localhost:8090/api/resource/customers
 
 spring:
   security:
     user:
       name: omfuser
       password: ENC(eiHqadpUCkEV8ioxTSjUYX7Eqog7fz10ynW87FG6ZFg=) # password
+    oauth2:
+      client:
+        registration:
+          okta:
+            client-id: 0oaivx2uysUxzlFvd0h7
+            client-secret: jdo1xC5AXlgsR5Wy4zNz82MoO9_kxPZX1gGkVa7d
+            authorization-grant-type: client_credentials
+            scope: customer_read
+        provider:
+          okta:
+            token-uri: https://dev-517011.oktapreview.com/oauth2/default/v1/token
 
 jasypt:
   encryptor:

@@ -3,7 +3,7 @@
     "id": "1",
     "type": "customers",
     "attributes": {
-      "name": "JohnSmith",
+      "name": "John Smith",
       "segment": "EXBN"
     },
     "links": {

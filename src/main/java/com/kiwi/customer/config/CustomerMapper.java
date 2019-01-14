@@ -14,9 +14,9 @@ public interface CustomerMapper {
     CustomerMapper INSTANCE = Mappers.getMapper( CustomerMapper.class );
 
     @Mappings({
-            @Mapping(source = "data.id", target = "id"),
-            @Mapping(source = "data.attributes.name", target = "name"),
-            @Mapping(source = "data.attributes.segment", target = "segment")
+            @Mapping(source = "id", target = "id"),
+            @Mapping(source = "name", target = "name"),
+            @Mapping(source = "segment", target = "segment")
     })
     CustomerDto toCustomerDto(Customer customer);
 

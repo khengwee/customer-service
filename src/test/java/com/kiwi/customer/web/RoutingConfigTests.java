@@ -60,10 +60,7 @@ public class RoutingConfigTests {
         customerList.add(customer1);
         customerList.add(customer2);
 
-        CustomerDtos customers = new CustomerDtos();
-        customers.setCustomerDtos(customerList);
-
-        Mono<CustomerDtos> expectedCustomer = Mono.just(customers);
+        Mono<List> expectedCustomer = Mono.just(customerList);
 
         // Mock Response
         Mockito.when(this.customerService.getCustomers()).thenReturn(expectedCustomer);
@@ -73,7 +70,7 @@ public class RoutingConfigTests {
 				.accept(MediaType.APPLICATION_JSON)
 				.exchange()
 				.expectStatus().isOk()
-				.expectBody(String.class).isEqualTo("{\"customerDtos\":[{\"id\":\"01S1374503K\",\"name\":\"customer1\",\"segment\":\"testSegment\"},{\"id\":\"01S1374503Z\",\"name\":\"customer2\",\"segment\":\"Priority\"}]}");
+				.expectBody(String.class).isEqualTo("[{\"id\":\"01S1374503K\",\"name\":\"customer1\",\"segment\":\"testSegment\"},{\"id\":\"01S1374503Z\",\"name\":\"customer2\",\"segment\":\"Priority\"}]");
 	}
 
 	@Test
