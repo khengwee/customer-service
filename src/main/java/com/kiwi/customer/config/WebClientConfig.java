@@ -15,9 +15,9 @@ import org.springframework.web.server.ServerWebExchange;
 public class WebClientConfig {
 
     @Bean
-    public WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations) {
+    public WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations, ServerOAuth2AuthorizedClientRepository authorizedClients) {
         ServerOAuth2AuthorizedClientExchangeFilterFunction oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
-                clientRegistrations, new UnAuthenticatedServerOAuth2AuthorizedClientRepository());
+                clientRegistrations, authorizedClients);
 
         // (optional) explicitly opt into using the oauth2Login to provide an access token implicitly
         // oauth.setDefaultOAuth2AuthorizedClient(true);

@@ -7,9 +7,11 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
+import org.springframework.security.oauth2.client.web.server.UnAuthenticatedServerOAuth2AuthorizedClientRepository;
 import org.springframework.test.context.junit4.SpringRunner;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -28,8 +30,14 @@ public class CustomerClientTests {
 
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private ReactiveClientRegistrationRepository reactiveClientRegistrationRepository;
+
     @Before
-    public void initSetup() {
+    public void setUp() {
+        ServerOAuth2AuthorizedClientExchangeFilterFunction oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
+                this.reactiveClientRegistrationRepository, new UnAuthenticatedServerOAuth2AuthorizedClientRepository());
+        customerClient = new CustomerClient(WebClient.builder().filter(oauth).build());
         objectMapper = new ObjectMapper();
     }
 
@@ -42,23 +50,10 @@ public class CustomerClientTests {
                         .withBody(loadFile("json/customers_1.json"))));
 
         customerClient.setCustomerValidationUrl("http://localhost:8089/api/mock/customer");
-        Mono<Customer> customerMono = customerClient.getCustomerById("1");
-        Mono<String> customerStrMono = customerMono.flatMap(customer -> {
-            String customerString = null;
-            try {
-                customerString = objectMapper.writeValueAsString(customer);
-            } catch (Exception e) {
-            }
-            return Mono.just(customerString);
-        });
-
-        String customerString = loadFile("json/customers_1.json");
-        customerString = customerString.replaceAll("\\s","");
-        System.out.println("customersString " + customerString);
-        StepVerifier.create(customerStrMono)
-                .expectNext(customerString)
-                .expectComplete()
-                .verify();
+        Customer customer = customerClient.getCustomerById("1").block();
+        Assert.assertEquals("1", customer.getData().getId());
+        Assert.assertEquals("John Smith", customer.getData().getAttributes().getName());
+        Assert.assertEquals("EXBN", customer.getData().getAttributes().getSegment());
     }
 
     @Test
@@ -70,23 +65,10 @@ public class CustomerClientTests {
                         .withBody(loadFile("json/customers.json"))));
 
         customerClient.setCustomerValidationUrl("http://localhost:8089/api/mock/customer");
-        Mono<Customers> customersMono = customerClient.getCustomers();
-        Mono<String> customersStrMono = customersMono.flatMap(customers -> {
-            String customersString = null;
-            try {
-                customersString = objectMapper.writeValueAsString(customers);
-            } catch (Exception e) {
-            }
-            return Mono.just(customersString);
-        });
-
-        String customersString = loadFile("json/customers.json");
-        customersString = customersString.replaceAll("\\s","");
-        System.out.println("customersString " + customersString);
-        StepVerifier.create(customersStrMono)
-                .expectNext(customersString)
-                .expectComplete()
-                .verify();
+        Customers customers = customerClient.getCustomers().block();
+        Assert.assertEquals("2", customers.getData().get(1).getId());
+        Assert.assertEquals("Tailor Swift", customers.getData().get(1).getAttributes().getName());
+        Assert.assertEquals("Personal", customers.getData().get(1).getAttributes().getSegment());
     }
 
     private static String loadFile(String filename) throws Exception {

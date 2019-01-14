@@ -4,7 +4,7 @@
       "id": "1",
       "type": "customers",
       "attributes": {
-        "name": "JohnSmith",
+        "name": "John Smith",
         "segment": "Priority"
       },
       "links": {
@@ -15,7 +15,7 @@
       "id": "2",
       "type": "customers",
       "attributes": {
-        "name": "TailorSwift",
+        "name": "Tailor Swift",
         "segment": "Personal"
       },
       "links": {
