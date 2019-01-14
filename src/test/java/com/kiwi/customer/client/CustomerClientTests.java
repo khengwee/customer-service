@@ -15,6 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
@@ -51,9 +52,9 @@ public class CustomerClientTests {
 
         customerClient.setCustomerValidationUrl("http://localhost:8089/api/mock/customer");
         Customer customer = customerClient.getCustomerById("1").block();
-        Assert.assertEquals("1", customer.getData().getId());
-        Assert.assertEquals("John Smith", customer.getData().getAttributes().getName());
-        Assert.assertEquals("EXBN", customer.getData().getAttributes().getSegment());
+        Assert.assertEquals("1", customer.getId());
+        Assert.assertEquals("John Smith", customer.getName());
+        Assert.assertEquals("EXBN", customer.getSegment());
     }
 
     @Test
@@ -65,10 +66,10 @@ public class CustomerClientTests {
                         .withBody(loadFile("json/customers.json"))));
 
         customerClient.setCustomerValidationUrl("http://localhost:8089/api/mock/customer");
-        Customers customers = customerClient.getCustomers().block();
-        Assert.assertEquals("2", customers.getData().get(1).getId());
-        Assert.assertEquals("Tailor Swift", customers.getData().get(1).getAttributes().getName());
-        Assert.assertEquals("Personal", customers.getData().get(1).getAttributes().getSegment());
+        List<Customer> customers = customerClient.getCustomers().block();
+        Assert.assertEquals("2", customers.get(1).getId());
+        Assert.assertEquals("Tailor Swift", customers.get(1).getName());
+        Assert.assertEquals("Personal", customers.get(1).getSegment());
     }
 
     private static String loadFile(String filename) throws Exception {

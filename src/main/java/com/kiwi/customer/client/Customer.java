@@ -1,22 +1,31 @@
 package com.kiwi.customer.client;
 
 public class Customer {
-    private Data data;
-    private Meta meta;
+    private String id;
+    private String name;
+    private String segment;
 
-    public Data getData() {
-        return data;
+    public String getId() {
+        return id;
     }
 
-    public void setData(Data data) {
-        this.data = data;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public Meta getMeta() {
-        return meta;
+    public String getName() {
+        return name;
     }
 
-    public void setMeta(Meta meta) {
-        this.meta = meta;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSegment() {
+        return segment;
+    }
+
+    public void setSegment(String segment) {
+        this.segment = segment;
     }
 }
