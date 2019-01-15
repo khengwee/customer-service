@@ -51,6 +51,7 @@ public class CustomerClient {
             try {
                 customerDatas = objectMapper.treeToValue(customersNode.get("data"), CustomerData[].class);
             } catch (JsonProcessingException e) {
+                e.printStackTrace();
             }
             return Mono.just(Arrays.asList(customerDatas));
         }));
