@@ -1,6 +1,7 @@
 package com.kiwi.customer.config;
 
 import com.kiwi.customer.client.Customer;
+import com.kiwi.customer.client.CustomerData;
 import com.kiwi.customer.web.CustomerDto;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -15,11 +16,11 @@ public interface CustomerMapper {
 
     @Mappings({
             @Mapping(source = "id", target = "id"),
-            @Mapping(source = "name", target = "name"),
-            @Mapping(source = "segment", target = "segment")
+            @Mapping(source = "attributes.name", target = "name"),
+            @Mapping(source = "attributes.segment", target = "segment")
     })
-    CustomerDto toCustomerDto(Customer customer);
+    CustomerDto toCustomerDto(CustomerData customer);
 
     @InheritInverseConfiguration
-    Customer fromCustomerDto(CustomerDto customerDto);
+    CustomerData fromCustomerDto(CustomerDto customerDto);
 }

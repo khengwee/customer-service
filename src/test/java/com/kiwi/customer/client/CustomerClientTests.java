@@ -36,10 +36,10 @@ public class CustomerClientTests {
 
     @Before
     public void setUp() {
+        objectMapper = new ObjectMapper();
         ServerOAuth2AuthorizedClientExchangeFilterFunction oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
                 this.reactiveClientRegistrationRepository, new UnAuthenticatedServerOAuth2AuthorizedClientRepository());
-        customerClient = new CustomerClient(WebClient.builder().filter(oauth).build());
-        objectMapper = new ObjectMapper();
+        customerClient = new CustomerClient(WebClient.builder().filter(oauth).build(), objectMapper);
     }
 
     @Test
@@ -51,10 +51,10 @@ public class CustomerClientTests {
                         .withBody(loadFile("json/customers_1.json"))));
 
         customerClient.setCustomerValidationUrl("http://localhost:8089/api/mock/customer");
-        Customer customer = customerClient.getCustomerById("1").block();
-        Assert.assertEquals("1", customer.getId());
-        Assert.assertEquals("John Smith", customer.getName());
-        Assert.assertEquals("EXBN", customer.getSegment());
+        CustomerData customerData = customerClient.getCustomerById("1").block();
+        Assert.assertEquals("1", customerData.getId());
+        Assert.assertEquals("John Smith", customerData.getAttributes().getName());
+        Assert.assertEquals("EXBN", customerData.getAttributes().getSegment());
     }
 
     @Test
@@ -66,10 +66,10 @@ public class CustomerClientTests {
                         .withBody(loadFile("json/customers.json"))));
 
         customerClient.setCustomerValidationUrl("http://localhost:8089/api/mock/customer");
-        List<Customer> customers = customerClient.getCustomers().block();
-        Assert.assertEquals("2", customers.get(1).getId());
-        Assert.assertEquals("Tailor Swift", customers.get(1).getName());
-        Assert.assertEquals("Personal", customers.get(1).getSegment());
+        List<CustomerData> customerDatas = customerClient.getCustomers().block();
+        Assert.assertEquals("2", customerDatas.get(1).getId());
+        Assert.assertEquals("Tailor Swift", customerDatas.get(1).getAttributes().getName());
+        Assert.assertEquals("Personal", customerDatas.get(1).getAttributes().getSegment());
     }
 
     private static String loadFile(String filename) throws Exception {

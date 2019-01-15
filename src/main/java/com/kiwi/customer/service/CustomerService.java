@@ -2,6 +2,7 @@ package com.kiwi.customer.service;
 
 import com.kiwi.customer.client.Customer;
 import com.kiwi.customer.client.CustomerClient;
+import com.kiwi.customer.client.CustomerData;
 import com.kiwi.customer.config.CustomerMapper;
 import com.kiwi.customer.web.CustomerDto;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,10 @@ public class CustomerService {
     }
 
     public Mono<CustomerDto> getCustomerById(String id) {
-        Mono<Customer> customerMono = customerClient.getCustomerById(id);
+        Mono<CustomerData> customerMono = customerClient.getCustomerById(id);
 
-        Mono<CustomerDto> customerDtoMono = customerMono.flatMap(customer -> {
-            CustomerDto customerDto = CustomerMapper.INSTANCE.toCustomerDto(customer);
+        Mono<CustomerDto> customerDtoMono = customerMono.flatMap(customerData -> {
+            CustomerDto customerDto = CustomerMapper.INSTANCE.toCustomerDto(customerData);
             return Mono.just(customerDto);
         });
 
@@ -31,16 +32,14 @@ public class CustomerService {
     }
 
     public Mono<List> getCustomers() {
-        Mono<List<Customer>> customersMono = customerClient.getCustomers();
+        Mono<List<CustomerData>> customersMono = customerClient.getCustomers();
 
-        Mono<List> customerDtosMono = customersMono.flatMap(customers -> {
-            //CustomerDtos customerDtos = new CustomerDtos();
+        Mono<List> customerDtosMono = customersMono.flatMap(customerDatas -> {
             List customerDtoList = new ArrayList<>();
-            for (Customer customer: customers) {
-                CustomerDto customerDto = CustomerMapper.INSTANCE.toCustomerDto(customer);
+            for (CustomerData customerData: customerDatas) {
+                CustomerDto customerDto = CustomerMapper.INSTANCE.toCustomerDto(customerData);
                 customerDtoList.add(customerDto);
             }
-            //customerDtos.setCustomerDtos(customerDtoList);
             return Mono.just(customerDtoList);
         });
         return customerDtosMono;
