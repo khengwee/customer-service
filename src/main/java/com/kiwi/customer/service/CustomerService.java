@@ -1,10 +1,12 @@
 package com.kiwi.customer.service;
 
-import com.kiwi.customer.client.Customer;
-import com.kiwi.customer.client.CustomerClient;
-import com.kiwi.customer.client.CustomerData;
-import com.kiwi.customer.config.CustomerMapper;
-import com.kiwi.customer.web.CustomerDto;
+import com.kiwi.customer.client.CustomerResourceClient;
+import com.kiwi.customer.client.CustomerDO;
+import com.kiwi.customer.mapper.CustomerMapper;
+import com.kiwi.customer.web.CustomerDTO;
+import org.mapstruct.factory.Mappers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -14,34 +16,34 @@ import java.util.List;
 @Service
 public class CustomerService {
 
-    private final CustomerClient customerClient;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerService.class);
+    private static final CustomerMapper MAPPER = Mappers.getMapper(CustomerMapper.class);
 
-    public CustomerService(CustomerClient customerClient) {
-        this.customerClient = customerClient;
+    private final CustomerResourceClient customerResourceClient;
+
+    public CustomerService(CustomerResourceClient customerResourceClient) {
+        this.customerResourceClient = customerResourceClient;
     }
 
-    public Mono<CustomerDto> getCustomerById(String id) {
-        Mono<CustomerData> customerMono = customerClient.getCustomerById(id);
-
-        Mono<CustomerDto> customerDtoMono = customerMono.flatMap(customerData -> {
-            CustomerDto customerDto = CustomerMapper.INSTANCE.toCustomerDto(customerData);
-            return Mono.just(customerDto);
+    public Mono<CustomerDTO> getCustomerById(String customerId) {
+        LOGGER.debug("getCustomerById: customerId={}", customerId);
+        return customerResourceClient.getCustomerById(customerId).flatMap(customerDO -> {
+            CustomerDTO customerDTO = MAPPER.toCustomerDTO(customerDO);
+            LOGGER.debug("getCustomerById: customerDTO={}", customerDTO);
+            return Mono.just(customerDTO);
         });
-
-        return customerDtoMono;
     }
 
-    public Mono<List> getCustomers() {
-        Mono<List<CustomerData>> customersMono = customerClient.getCustomers();
-
-        Mono<List> customerDtosMono = customersMono.flatMap(customerDatas -> {
-            List customerDtoList = new ArrayList<>();
-            for (CustomerData customerData: customerDatas) {
-                CustomerDto customerDto = CustomerMapper.INSTANCE.toCustomerDto(customerData);
-                customerDtoList.add(customerDto);
+    public Mono<List<CustomerDTO>> getCustomers() {
+        LOGGER.debug("getCustomers");
+        return customerResourceClient.getCustomers().flatMap(customerDOs -> {
+            List<CustomerDTO> customerDTOs = new ArrayList<>();
+            for (CustomerDO customerDO: customerDOs) {
+                CustomerDTO customerDTO = MAPPER.toCustomerDTO(customerDO);
+                customerDTOs.add(customerDTO);
             }
-            return Mono.just(customerDtoList);
+            LOGGER.debug("getCustomers: customerDTOs={}", customerDTOs);
+            return Mono.just(customerDTOs);
         });
-        return customerDtosMono;
     }
 }

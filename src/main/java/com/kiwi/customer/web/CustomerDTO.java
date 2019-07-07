@@ -1,18 +1,19 @@
 package com.kiwi.customer.web;
 
-public class CustomerDto {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.io.Serializable;
+
+import static com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CustomerDTO implements Serializable {
 
     private String id;
     private String name;
     private String segment;
-
-    public CustomerDto() {}
-
-    public CustomerDto(String id, String name, String segment) {
-        this.id = id;
-        this.name = name;
-        this.segment = segment;
-    }
 
     public String getId() {
         return id;
@@ -40,6 +41,10 @@ public class CustomerDto {
 
     @Override
     public String toString() {
-        return String.format("id = %s, name = %s, lastname = %s", id, name, segment);
+        return "CustomerDTO{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", segment='" + segment + '\'' +
+                '}';
     }
 }

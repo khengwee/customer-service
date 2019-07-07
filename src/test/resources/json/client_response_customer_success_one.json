@@ -4,7 +4,7 @@
     "type": "customers",
     "attributes": {
       "name": "John Smith",
-      "segment": "EXBN"
+      "segment": "Priority"
     },
     "links": {
       "self": "http://localhost:8081/api/customers/1"

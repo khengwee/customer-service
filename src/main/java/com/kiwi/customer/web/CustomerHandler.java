@@ -1,6 +1,8 @@
 package com.kiwi.customer.web;
 
 import com.kiwi.customer.service.CustomerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -8,10 +10,10 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
 @Component
 public class CustomerHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerHandler.class);
 
     private final CustomerService customerService;
 
@@ -20,20 +22,25 @@ public class CustomerHandler {
     }
 
     public Mono<ServerResponse> findOne(ServerRequest request) {
-        String customerId = request.pathVariable("id");
+        String customerId = request.pathVariable("customerId");
         // build notFound response
         Mono<ServerResponse> notFound = ServerResponse.notFound().build();
-        // get customer from repository
-        Mono<CustomerDto> customerMono = customerService.getCustomerById(customerId);
-        // build response
-        return customerMono
-                .flatMap(customerDto -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromObject(customerDto)))
-                .switchIfEmpty(notFound);
+        return customerService.getCustomerById(customerId).flatMap(customerDTO -> {
+            LOGGER.debug("findOne: customerId={}, response={}", customerId, customerDTO);
+            return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+                    .body(BodyInserters.fromObject(customerDTO));
+        }).switchIfEmpty(notFound);
     }
 
     public Mono<ServerResponse> findAll(ServerRequest request) {
-        Mono<List> customers = customerService.getCustomers();
-        return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(customers, List.class);
+        // build notFound response
+        Mono<ServerResponse> notFound = ServerResponse.notFound().build();
+       return customerService.getCustomers().flatMap(customerDTOs -> {
+           LOGGER.debug("findOne: request={}, response={}", request, customerDTOs);
+           return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+                   .body(BodyInserters.fromObject(customerDTOs));
+       }).switchIfEmpty(notFound);
+
     }
 
 }

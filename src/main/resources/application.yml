@@ -1,13 +1,14 @@
 server:
   port: 8091
-  backend:
-    customerValidationUrl: http://localhost:8090/api/resource/customers
+  servlet:
+    context-path: /api
 
 spring:
   security:
     user:
-      name: omfuser
+      name: kiwiuser
       password: ENC(eiHqadpUCkEV8ioxTSjUYX7Eqog7fz10ynW87FG6ZFg=) # password
+    auth-url-path-pattern: /api/*/**
     oauth2:
       client:
         registration:
@@ -19,6 +20,10 @@ spring:
         provider:
           okta:
             token-uri: https://dev-517011.oktapreview.com/oauth2/default/v1/token
+
+backend:
+  client:
+    customerResourceUrl: http://localhost:8090/api/resource/customers
 
 jasypt:
   encryptor:

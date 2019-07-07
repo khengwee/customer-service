@@ -1,11 +1,15 @@
 package com.kiwi.customer.client;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Customer implements Serializable {
+public class CustomerAttributeDO implements Serializable {
     private String name;
     private String segment;
 
@@ -23,5 +27,13 @@ public class Customer implements Serializable {
 
     public void setSegment(String segment) {
         this.segment = segment;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomerAttributeDO{" +
+                "name='" + name + '\'' +
+                ", segment='" + segment + '\'' +
+                '}';
     }
 }

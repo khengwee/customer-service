@@ -18,13 +18,16 @@ public class WebSecurityConfig {
     @Value("${spring.security.user.password}")
     private String password;
 
+    @Value("${spring.security.auth-url-path-pattern}")
+    private String authenticatedUrlPathPattern;
+
     @Bean
     SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
                 .csrf().disable()
                 .authorizeExchange()
                 .pathMatchers("/*").permitAll()
-                .pathMatchers("/api/*/**").authenticated()
+                .pathMatchers(authenticatedUrlPathPattern).authenticated()
                 .and().httpBasic()
                 .and()
                 .build();
